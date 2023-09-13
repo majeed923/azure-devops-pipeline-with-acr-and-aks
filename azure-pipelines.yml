@@ -1,6 +1,16 @@
 trigger:
 - none
 
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: 'e0c3dff1-f23e-4604-a8c8-68e6128adf18'
+  imageRepository: 'dockerjavascript'
+  containerRegistry: 'learningpurposebyaarij.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/app/Dockerfile'
+  imagePullSecret: 'aksdevopsacr21364011-auth'
+  tag: '$(Build.BuildId)'
+  k8sNamespace: 'calico-system'
+
 pool:
   name: TRAPEZE-AGENT
 
