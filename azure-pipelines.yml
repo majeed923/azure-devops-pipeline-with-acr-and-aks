@@ -6,20 +6,29 @@ pool:
 
 steps:
 
-- task: AzureCLI@2
+# - task: AzureCLI@2
+#   inputs:
+#     azureSubscription: 'App-Configurations'
+#     scriptType: 'ps'
+#     scriptLocation: 'inlineScript'
+#     inlineScript: |
+#       # Build the Docker image
+#       docker build -t learningpurposebyaarij.azurecr.io/web-game:tag -f Dockerfile 2048-game
+      
+#       # Log in to Azure Container Registry (ACR)
+#       az acr login --name learningpurposebyaarij
+      
+#       # Push the Docker image to ACR
+#       docker push learningpurposebyaarij.azurecr.io/web-game:tag
+
+- task: Docker@2
+  displayName: Build and push an image to container registry
   inputs:
-    azureSubscription: 'App-Configurations'
-    scriptType: 'ps'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      # Build the Docker image
-      docker build -t learningpurposebyaarij.azurecr.io/web-game:tag -f Dockerfile 2048-game
-      
-      # Log in to Azure Container Registry (ACR)
-      az acr login --name learningpurposebyaarij
-      
-      # Push the Docker image to ACR
-      docker push learningpurposebyaarij.azurecr.io/web-game:tag
+    containerRegistry: '$(dockerRegistryServiceConnection)'
+    repository: 'web-game'
+    command: 'buildAndPush'
+    Dockerfile: '**/*Dockerfile'
+    tags: '$(tag)'
 
 - powershell: Get-Content 01_kubernetes_aks/app-deploy.yaml
 
