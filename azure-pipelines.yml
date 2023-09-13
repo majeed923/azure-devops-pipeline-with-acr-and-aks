@@ -46,7 +46,7 @@ steps:
     connectionType: 'Azure Resource Manager'
     azureSubscriptionEndpoint: 'App-Configurations'
     azureResourceGroup: 'Learning-Purpose'
-    kubernetesCluster: 'Learning_Purpose'
+    kubernetesCluster: 'learningpurpose'
     namespace: 'default'
     command: 'apply'
     useConfigurationFile: true
