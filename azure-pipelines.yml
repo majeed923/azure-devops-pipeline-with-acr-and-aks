@@ -1,35 +1,40 @@
 trigger:
-- main
+- none
 
 pool:
-  vmImage: ubuntu-latest
+  name: TRAPEZE-AGENT
 
 steps:
 
 - task: AzureCLI@2
   inputs:
-    azureSubscription: 'Towards-AzurePortal'
-    scriptType: 'bash'
+    azureSubscription: 'App-Configurations'
+    scriptType: 'ps'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      docker build -t mylabacr13.azurecr.io/web-game:tag 2048-game
-      az acr login -n mylabacr13
-      docker push mylabacr13.azurecr.io/web-game:tag
+      # Build the Docker image
+      docker build -t learningpurposebyaarij.azurecr.io/web-game:tag -f Dockerfile .
+      
+      # Log in to Azure Container Registry (ACR)
+      az acr login --name learningpurposebyaarij
+      
+      # Push the Docker image to ACR
+      docker push learningpurposebyaarij.azurecr.io/web-game:tag
 
-- script: cat 01_kubernetes_aks/app-deploy.yaml
+- powershell: Get-Content 01_kubernetes_aks/app-deploy.yaml
 
 - task: Kubernetes@1
   inputs:
     connectionType: 'Azure Resource Manager'
-    azureSubscriptionEndpoint: 'Towards-AzurePortal'
-    azureResourceGroup: 'TestLab-RG'
-    kubernetesCluster: 'testlab-aks'
+    azureSubscriptionEndpoint: 'App-Configurations'
+    azureResourceGroup: 'Learning-Purpose'
+    kubernetesCluster: 'Learning_Purpose'
     namespace: 'default'
     command: 'apply'
     useConfigurationFile: true
     configuration: '01_kubernetes_aks'
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
-    azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
-    azureContainerRegistry: 'mylabacr13.azurecr.io'
+    azureSubscriptionEndpointForSecrets: 'App-Configurations'
+    azureContainerRegistry: 'learningpurposebyaarij.azurecr.io'
     forceUpdate: false
