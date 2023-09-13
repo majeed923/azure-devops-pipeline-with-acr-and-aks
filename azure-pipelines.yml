@@ -13,7 +13,7 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |
       # Build the Docker image
-      docker build -t learningpurposebyaarij.azurecr.io/web-game:tag -f Dockerfile 2048-game/Dockerfile
+      docker build -t learningpurposebyaarij.azurecr.io/web-game:tag -f Dockerfile 2048-game
       
       # Log in to Azure Container Registry (ACR)
       az acr login --name learningpurposebyaarij
